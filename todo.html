@@ -1,0 +1,288 @@
+<html>
+
+<head>
+    <title>NUS To-do-list System</title>
+    <link rel="stylesheet" href="todo.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+    <script src="todo.js" defer></script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="title">
+            <img id="logo" src="img/nus1-logo.png" alt="nus">
+            <h1>To-do-list</h1>
+        </div>
+
+        <div id="overview">
+            <div class="taskdata">
+                <div>
+                    <img src="img/all.png" alt="all">
+                </div>
+                <div>
+                    <div class="view_title">All</div>
+                    <div class="view_num" id="all-tasks">553</div>
+                </div>
+            </div>
+            <div class="taskdata">
+                <div>
+                    <img src="img/completed.png" alt="completed">
+                </div>
+                <div>
+                    <div class="view_title">Completed</div>
+                    <div class="view_num" id="completed-tasks">553</div>
+                </div>
+            </div>
+            <div class="taskdata">
+                <div>
+                    <img src="img/inprogress.png" alt="inprogress">
+                </div>
+                <div>
+                    <div class="view_title">In Progress</div>
+                    <div class="view_num" id="process-tasks">553</div>
+                </div>
+            </div>
+            <div class="taskdata" id="rate">
+                <div>
+                    <img src="img/rate.png" alt="rate">
+                </div>
+                <div>
+                    <div class="view_title">Completion Rate</div>
+                    <div class="view_num" id="task-rate">35%</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="category">
+            <ul>
+                <li><a href="#" class="item-selected" data-id="Selected">All</a></li>
+                <li><a href="#" data-id="Process">in progress</a></li>
+                <li><a href="#" data-id="Completed">completed</a></li>
+            </ul>
+            <div id="add">Add Task</div>
+        </div>
+
+
+
+        <div id="task_table">
+            <table>
+                <thead>
+                    <tr>
+                        <td>No</td>
+                        <td>description</td>
+                        <td>priority</td>
+                        <td>Creation time</td>
+                        <td>Duration</td>
+                        <td>status</td>
+                        <td>deadline</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>1</td>
+                        <td>task 123</td>
+                        <td>high</td>
+                        <td>2023-02-01</td>
+                        <td>10 days</td>
+                        <td>
+                            <p class="completed" data-tag="status">Completed</p>
+                        </td>
+                        <td>2023-03-01</td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>task 123</td>
+                        <td>high</td>
+                        <td>2023-02-01</td>
+                        <td>10 days</td>
+                        <td>
+                            <p class="progress" data-tag="status">In Progress</p>
+                        </td>
+                        <td>2023-03-01</td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>task 123</td>
+                        <td>high</td>
+                        <td>2023-02-01</td>
+                        <td>10 days</td>
+                        <td>
+                            <p class="timeout" data-tag="status">Timed Out</p>
+                        </td>
+                        <td>2023-03-01</td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>task 123</td>
+                        <td>high</td>
+                        <td>2023-02-01</td>
+                        <td>10 days</td>
+                        <td>
+                            <p class="completed" data-tag="status">Completed</p>
+                        </td>
+                        <td>2023-03-01</td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>task 123</td>
+                        <td>high</td>
+                        <td>2023-02-01</td>
+                        <td>10 days</td>
+                        <td>
+                            <p class="completed" data-tag="status">Completed</p>
+                        </td>
+                        <td>2023-03-01</td>
+                    </tr>
+
+                </tbody>
+
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal-wrapper" id="modify-dialog">
+        <div class="details-modal">
+            <div class="details-modal-title">
+                <h1>Modify Status</h1>
+            </div>
+            <div class="details-modal-content">
+                <p>
+                    Whether to change the status of this entry to “completed”？
+                </p>
+            </div>
+            <hr />
+            <div id="modal_op">
+                <div class="confirm button" id="confirm">Confirm</div>
+                <div class="cancal button" id="cancel">Cancal</div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="modal-wrapper" id="alert-dialog">
+        <div class="alert" id="alert-dialog-body">
+            <img src="img/alert.png" alt="alert">
+            <p id="alert-content">Deadline should be after the day or the description cannot be empty </p>
+        </div>
+    </div>
+
+    <div class="modal-wrapper" id="add-dialog">
+        <div class="details-modal" id="add_modal">
+
+            <div class="details-modal-title">
+                <h1 id="add_titile">Add Project</h1>
+            </div>
+
+            <h3>description</h3>
+
+            <div>
+                <input class="input" type="text" name="description">
+            </div>
+
+            <h3>Priority</h3>
+            <div>
+
+                <form>
+                    <select id="task-priority">
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>low</option>
+                    </select>
+                </form>
+
+            </div>
+
+            <h3>deadline</h3>
+            <div id="deadline">
+
+                <form>
+                    <select class="form1w" id="task-year">
+                        <option>2023</option>
+                        <option>2024</option>
+                        <option>2025</option>
+                        <option>2026</option>
+                    </select>
+                </form>
+
+                <form>
+                    <select class="form1w" id="task-month">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                    </select>
+                </form>
+
+                <form>
+                    <select class="form1w" id="task-day">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                        <option>21</option>
+                        <option>22</option>
+                        <option>23</option>
+                        <option>24</option>
+                        <option>25</option>
+                        <option>26</option>
+                        <option>27</option>
+                        <option>28</option>
+                        <option>29</option>
+                        <option>30</option>
+                        <option>31</option>
+                    </select>
+                </form>
+
+            </div>
+            <hr />
+            <div id="modal_op">
+                <div class="confirm button" id="confirm">Confirm</div>
+                <div class="cancal button" id="cancel">Cancal</div>
+            </div>
+        </div>
+       
+
+
+    </div>
+
+</body>
+
+</html>
