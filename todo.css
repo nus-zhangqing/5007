@@ -72,6 +72,9 @@ thead tr td {
     opacity: 0.9;
     height: 69px;
 }
+#task_table tbody tr {
+    cursor: pointer;
+}
 
 tbody td p[data-tag="status"] {
     cursor: pointer;
@@ -389,6 +392,9 @@ form option {
 }
 .hidden {
     display: none;
+}
+.hidden-scroll {
+    overflow: hidden;
 }
 
 /* .form1w option {

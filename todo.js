@@ -52,30 +52,26 @@ function bootstrap()
     })
     document.querySelector('#modify-dialog #confirm').addEventListener('click', () => {
         finishfunction()
-        removeClass(document.querySelector('#modify-dialog'), 'show')
+        hiddenDialog(DIALOG_TYPES.MODIFY)
     })
     document.querySelector('#modify-dialog #cancel').addEventListener('click', () => {
-        removeClass(document.querySelector('#modify-dialog'), 'show')
+        hiddenDialog(DIALOG_TYPES.MODIFY)
     })
     document.querySelector('#add-dialog #confirm').addEventListener('click', () => {
         addfunction()
-        removeClass(document.querySelector('#add-dialog'), 'show')
+        hiddenDialog(DIALOG_TYPES.ADD)
     })
     document.querySelector('#add-dialog #cancel').addEventListener('click', () => {
-        removeClass(document.querySelector('#add-dialog'), 'show')
+        hiddenDialog(DIALOG_TYPES.ADD)
     })
     document.querySelector('#alert-dialog').addEventListener('click', (e) => {
         const dialogBody = document.querySelector('#alert-dialog-body')
         if (!dialogBody.contains(e.target)) {
-            removeClass(document.querySelector('#alert-dialog'), 'show')
+            hiddenDialog(DIALOG_TYPES.ALERT)
         }
     })
-    document.querySelector('#task_table').addEventListener('click', e => {
-        if (e.target.getAttribute('data-tag') === 'status' && !e.target.classList.contains('completed')) {
-            modifyTaskIndex = +e.target.getAttribute('data-index')
-            showDialog(DIALOG_TYPES.MODIFY)
-        }
-    })
+    
+
     document.querySelector('#category').addEventListener('click', (e) => {
         const currentTab = e.target.getAttribute('data-id')
         if (currentTab && currentTab !== activeTab) {
@@ -89,6 +85,24 @@ function bootstrap()
     document.querySelector('#task-month').addEventListener('change', renderDays)
 }
 
+function bindTableClick() {
+    const tableRows = document.querySelectorAll('#task_table tbody tr')
+    if (tableRows) {
+        tableRows.forEach(row => {
+            row.removeEventListener('click', clickTableRow)
+            row.addEventListener('click', clickTableRow)
+        })
+    }
+    
+}
+
+function clickTableRow(e) {
+    const status = e.currentTarget.getAttribute('data-status')
+    if (status &&  status !== "Completed") {
+        modifyTaskIndex = +e.currentTarget.getAttribute('data-index')
+        showDialog(DIALOG_TYPES.MODIFY)
+    }
+}
 function renderDays() {
     const year = document.querySelector('#task-year').value
     const month = document.querySelector('#task-month').value
@@ -116,10 +130,10 @@ function addfunction()
 
     if (end_time <= Date.now()) {
         document.querySelector('#alert-content').innerHTML = 'Deadline should be after today'
-        addClass(document.querySelector('#alert-dialog'), 'show')
+        showDialog('#alert-dialog')
     } else if (description === '') {
         document.querySelector('#alert-content').innerHTML = 'The description cannot be empty'
-        addClass(document.querySelector('#alert-dialog'), 'show')
+        showDialog('#alert-dialog')
     } else {
         allTasks.unshift({description,priority, create_time, end_time, status: 'In Progress' })
         storeTasks()
@@ -167,14 +181,14 @@ function displayfunction()
             className = 'timeout'
         }
         acc += `
-        <tr>
+        <tr data-status="${status}"  data-index=${index + 1}>
             <td>${index + 1}</td>
             <td>${description}</td>
             <td>${priority}</td>
             <td>${formatTime(create_time)}</td>
             <td>${getDuration(create_time, end_time)} Days</td>
             <td>
-                <p class=${className} data-tag="status" data-index=${index + 1}>${status}</p>
+                <p class=${className}>${status}</p>
             </td>
             <td>${formatTime(end_time)}</td>
         </tr>
@@ -189,6 +203,8 @@ function displayfunction()
     document.querySelector('#completed-tasks').innerHTML = completedTasks.length
     document.querySelector('#process-tasks').innerHTML = getTasks(TAB_TYPES.PROCESS).length
     document.querySelector('#task-rate').innerHTML = `${allTasks.length > 0 ? Math.floor(completedTasks.length / allTasks.length * 100) : '0'}%`
+    
+    bindTableClick()
 }
 
 function storeTasks() {
@@ -203,6 +219,29 @@ function showDialog(type) {
     } else if (type === DIALOG_TYPES.MODIFY) {
         addClass(document.querySelector('#modify-dialog'), 'show')
     }
+    // addClass(document.body, 'hidden-scroll')
+    document.body.scrollTop = 0
+    document.body.addEventListener('scroll', stopScroll, { passive: false })
+    document.body.addEventListener('mousewheel', stopScroll, { passive: false })
+}
+
+function stopScroll(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+}
+
+function hiddenDialog(type) {
+    if (type === DIALOG_TYPES.ADD) {
+        removeClass(document.querySelector('#add-dialog'), 'show')
+    } else if (type === DIALOG_TYPES.ALERT) {
+        removeClass(document.querySelector('#alert-dialog'), 'show')
+    } else if (type === DIALOG_TYPES.MODIFY) {
+        removeClass(document.querySelector('#modify-dialog'), 'show')
+    }
+    // removeClass(document.body, 'hidden-scroll')
+    document.body.removeEventListener('scroll', stopScroll)
+    document.body.removeEventListener('mousewheel', stopScroll)
 }
 
 function addClass(dom, className) {
