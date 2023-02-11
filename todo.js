@@ -5,10 +5,10 @@ const TAB_TYPES = {
     PROCESS: 'Process',
     COMPLETE: 'Completed'
 }
-var outstandingtasks=[];
-var finishedtasks=[];
+var outstandingtasks = [];
+var finishedtasks = [];
 var allTasks = []
-var maxtaskid=0;
+var maxtaskid = 0;
 
 var modifyTaskIndex = 0
 var activeTab = TAB_TYPES.ALL
@@ -18,7 +18,7 @@ const DIALOG_TYPES = {
     ALERT: 'alert',
     MODIFY: 'modify'
 }
-window.onload = function() {
+window.onload = function () {
     bootstrap()
 }
 
@@ -34,8 +34,7 @@ function getTasks(tab = activeTab) {
     }
     return allTasks
 }
-function bootstrap()
-{
+function bootstrap() {
     // Code for Q7 starts here. This code restores the values
     // of variables to their previous values (i.e., before browser
     // was closed). 
@@ -43,7 +42,7 @@ function bootstrap()
     // Code for Q7 ends here.
     try {
         allTasks = JSON.parse(localStorage.getItem('tasks')) || []
-    } catch(e) {
+    } catch (e) {
 
     }
     displayfunction()
@@ -70,7 +69,7 @@ function bootstrap()
             hiddenDialog(DIALOG_TYPES.ALERT)
         }
     })
-    
+
 
     document.querySelector('#category').addEventListener('click', (e) => {
         const currentTab = e.target.getAttribute('data-id')
@@ -93,12 +92,12 @@ function bindTableClick() {
             row.addEventListener('click', clickTableRow)
         })
     }
-    
+
 }
 
 function clickTableRow(e) {
     const status = e.currentTarget.getAttribute('data-status')
-    if (status &&  status !== "Completed") {
+    if (status && status !== "Completed") {
         modifyTaskIndex = +e.currentTarget.getAttribute('data-index')
         showDialog(DIALOG_TYPES.MODIFY)
     }
@@ -112,8 +111,7 @@ function renderDays() {
         return acc
     }, '')
 }
-function addfunction()
-{
+function addfunction() {
     // Code for Q2 starts here. This function uses DOM read
     // to get the values of HTML fields. Subsequently, it
     // adds them to the JS variable called outstandingtasks. 
@@ -130,22 +128,21 @@ function addfunction()
 
     if (end_time <= Date.now()) {
         document.querySelector('#alert-content').innerHTML = 'Deadline should be after today'
-        showDialog('#alert-dialog')
+        showDialog(DIALOG_TYPES.ALERT)
     } else if (description === '') {
         document.querySelector('#alert-content').innerHTML = 'The description cannot be empty'
-        showDialog('#alert-dialog')
+        showDialog(DIALOG_TYPES.ALERT)
     } else {
-        allTasks.unshift({description,priority, create_time, end_time, status: 'In Progress' })
+        allTasks.unshift({ description, priority, create_time, end_time, status: 'In Progress' })
         storeTasks()
         displayfunction()
     }
-   
+
 
     //Code for Q2 ends here.
 }
 
-function finishfunction()
-{
+function finishfunction() {
     // Code for Q3 starts here. This function uses DOM read to
     // get the serial number from the user. Subsequently, it
     // searches/finds the Task matching the serial number and
@@ -158,12 +155,11 @@ function finishfunction()
         displayfunction()
     }
 
-    
+
     // Code for Q3 ends.
 }
 
-function displayfunction()
-{
+function displayfunction() {
     // Code for Q4 starts here. This function identifies the HTML
     // element corresponding to the Tables for outstanding 
     // and finished tasks. You must create the table by adding rows,
@@ -203,7 +199,7 @@ function displayfunction()
     document.querySelector('#completed-tasks').innerHTML = completedTasks.length
     document.querySelector('#process-tasks').innerHTML = getTasks(TAB_TYPES.PROCESS).length
     document.querySelector('#task-rate').innerHTML = `${allTasks.length > 0 ? Math.floor(completedTasks.length / allTasks.length * 100) : '0'}%`
-    
+
     bindTableClick()
 }
 
@@ -266,5 +262,5 @@ function formatTime(timeStamp) {
 
 function getDuration(startTime, endTime) {
     const oneDay = 24 * 60 * 60 * 1000
-    return Math.max(0, Math.ceil((endTime - startTime)/ oneDay))
+    return Math.max(0, Math.ceil((endTime - startTime) / oneDay))
 }
